@@ -1,10 +1,10 @@
 "use client";
 
-import { useTextStore } from "../../store/useTextStore";
-import { useUIStore } from "../../store/useUIStore";
-import { useHistoryStore } from "../../store/useHistoryStore";
-import { refineText } from "../../utils/apiServices";
-import { estimateTokens, calculateCost } from "../../utils/tokenMetrics";
+import { useTextStore } from "@/store/useTextStore";
+import { useUIStore } from "@/store/useUIStore";
+import { useHistoryStore } from "@/store/useHistoryStore";
+import { refineText } from "@/utils/apiServices";
+import { estimateTokens, calculateCost } from "@/utils/tokenMetrics";
 import { useRef, useState } from "react";
 import Button from "../UI/Button";
 import { Sparkles, Shield, MessageSquare, Flame, FilePlus2, XCircle, HelpCircle } from "lucide-react";

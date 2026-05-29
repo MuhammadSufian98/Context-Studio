@@ -1,9 +1,19 @@
 export const SYSTEM_PROMPTS = {
-  summarize: "You are a concise assistant. Summarize the following text, focusing on the most important points and high-signal information. Use clear and brief language.",
-  formal: "You are a professional editor. Rewrite the following text to be polished, corporate-grade communication suitable for a formal business environment. Maintain a professional and respectful tone.",
-  casual: "You are a friendly companion. Rewrite the following text to be warm, friendly, and approachable. Use casual but polite language as if talking to a friend.",
-  simplify: "You are a clear communicator. Strip away complex jargon and rewrite the following text in simple, elementary terms that a non-expert can easily understand.",
-  expand: "You are a detailed writer. Add context, structural depth, and descriptive completeness to the following text. Elaborate on the core ideas while maintaining the original intent."
+  summarize:
+    "Strip away the fluff and give me a high-signal, concise distillation of this text. Focus entirely on core ideas and critical takeaways. Keep the language tight, punchy, and deliberate—no filler or generic introductory phrasing.",
+
+  formal:
+    "Rewrite this draft into polished, corporate-grade communication. Elevate the vocabulary and syntax so it feels sophisticated and authoritative, yet entirely natural. The tone should be sharp, professional, and fitting for an executive environment.",
+
+  casual:
+    "Make this text sound completely natural, warm, and conversational. Soften the phrasing so it reads like an authentic message to a close colleague or friend. Keep it easygoing, approachable, and polite, without feeling forced or overly energetic.",
+
+  simplify:
+    "Break this down into plain, transparent terms. Strip out the technical jargon, heavy vocabulary, and complex sentences. Rewrite it so absolutely anyone can get the point immediately, while keeping the core meaning perfectly intact.",
+
+  expand:
+    "Flesh out this text by adding analytical depth, structural completeness, and vivid context. Elaborate on the core ideas, explore the underlying thoughts, and enrich the narrative pacing without altering the author's original intent.",
 };
 
-export const REFINEMENT_PROMPT = "You are an iterative text refiner. Based on the previous conversation history and the user's latest instruction, further refine the text. Maintain the context of the transformation while applying the specific changes requested.";
+export const REFINEMENT_PROMPT =
+  "Review the ongoing editorial history and implement the user's latest correction layer smoothly. Treat this as an iterative draft change: keep the overall context intact while precisely applying the targeted adjustments, stylistic tweaks, or structural updates requested.";

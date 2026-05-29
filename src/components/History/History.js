@@ -165,7 +165,6 @@ export default function History() {
               className="h-9 px-3.5 normal-case font-bold text-xs"
             >
               <span>Refine</span>
-              <ArrowRight className="w-3.5 h-3.5" />
             </Button>
           </div>
         </div>

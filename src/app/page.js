@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import Editor from "../components/Editor/Editor";
-import Controls from "../components/Controls/Controls";
-import History from "../components/History/History";
-import { useUIStore } from "../store/useUIStore";
+import Editor from "@/components/Editor/Editor";
+import Controls from "@/components/Controls/Controls";
+import History from "@/components/History/History";
+import { useUIStore } from "@/store/useUIStore";
 import { History as HistoryIcon, FileText, Settings, User } from "lucide-react";
 
 export default function Home() {
@@ -23,12 +23,7 @@ export default function Home() {
       <nav className="fixed top-0 left-0 w-full z-50 bg-[#f7f4f0]/80 backdrop-blur-md border-b border-[#e9e1d6]/50">
         <div className="flex justify-between items-center w-full px-8 py-4 max-w-7xl mx-auto font-medium">
           <div className="font-serif text-xl italic tracking-tight select-none">
-            Manuscript
-          </div>
-
-          <div className="flex items-center gap-5 text-[#8c7a78]">
-            <Settings className="w-4.5 h-4.5 cursor-pointer hover:text-[#4a3e3d] transition-colors" />
-            <User className="w-4.5 h-4.5 cursor-pointer hover:text-[#4a3e3d] transition-colors" />
+            Context Studio
           </div>
         </div>
       </nav>
@@ -44,8 +39,8 @@ export default function Home() {
             Editorial Studio
           </h1>
           <p className="text-xs md:text-sm text-[#8c7a78] mt-2.5 max-w-lg mx-auto leading-relaxed font-medium">
-            Refine your thoughts with our premium manuscript editor, designed
-            for clarity and deliberate focus.
+            Refine your thoughts with our premium Context Studio editor,
+            designed for clarity and deliberate focus.
           </p>
         </header>
 
@@ -182,7 +177,7 @@ export default function Home() {
               <span>LLM: {status === "idle" ? "Active" : "Processing"}</span>
             </div>
             <p className="text-[10px] font-sans font-bold text-[#8c7a78]/60 uppercase tracking-widest">
-              © 2026 Editorial Systems • Premium Manuscript Tier
+              © 2026 Editorial Systems • Premium Context Studio Tier
             </p>
           </div>
         </footer>

@@ -1,5 +1,6 @@
 import { Groq } from 'groq-sdk';
 import { SYSTEM_PROMPTS, REFINEMENT_PROMPT } from '../../../lib/prompts';
+import { estimateTokens, calculateCost } from '../../../utils/tokenMetrics';
 
 export const dynamic = 'force-dynamic';
 
@@ -28,17 +29,20 @@ export async function POST(req) {
       return new Response('Missing text or follow-up', { status: 400 });
     }
 
+    const criteria = transformation || (followUp ? 'refinement' : 'summarize');
+    const sourcePayload = followUp || text || '';
+    console.log(`[API] Refinement cycle initialized for transformation rule: "${criteria}"`);
+    console.log(`[API] Payload Preview: "${sourcePayload.substring(0, 50)}..." (${sourcePayload.length} chars)`);
+
     let messages = [];
 
     if (followUp) {
-      // Refinement mode: Use history and the latest user request
       messages = [
         { role: 'system', content: REFINEMENT_PROMPT },
         ...history,
         { role: 'user', content: followUp }
       ];
     } else {
-      // Initial transformation mode
       const systemPrompt = SYSTEM_PROMPTS[transformation] || SYSTEM_PROMPTS.summarize;
       messages = [
         { role: 'system', content: systemPrompt },
@@ -50,22 +54,52 @@ export async function POST(req) {
       messages,
       model: 'llama-3.3-70b-versatile',
       stream: true,
-      temperature, // Apply temperature
+      temperature,
     }, {
-      signal: req.signal, // Pass the request signal to Groq
+      signal: req.signal,
     });
 
-    // Create a ReadableStream to pipe the tokens to the client
+    console.log('[API] Upstream (Groq) text stream connection established.');
+
+    let fullContent = '';
+
     const responseStream = new ReadableStream({
       async start(controller) {
-        for await (const chunk of stream) {
-          const content = chunk.choices[0]?.delta?.content || '';
-          if (content) {
-            controller.enqueue(new TextEncoder().encode(content));
+        try {
+          for await (const chunk of stream) {
+            const content = chunk.choices[0]?.delta?.content || '';
+            if (content) {
+              fullContent += content;
+              controller.enqueue(new TextEncoder().encode(content));
+            }
           }
+          
+          console.log('[API] Network stream layer delivery complete.');
+          
+          const inputContent = messages.map(m => m.content).join(' ');
+          const inputTokens = estimateTokens(inputContent);
+          const outputTokens = estimateTokens(fullContent);
+          const cost = calculateCost(inputTokens, outputTokens);
+          
+          console.log(`\n--- [Server Telemetry Summary] ---`);
+          console.log(`Transformation Rule : ${criteria}`);
+          console.log(`Estimated Tokens    : ${inputTokens + outputTokens}`);
+          console.log(`Calculated Cost     : $${cost.toFixed(5)}`);
+          console.log(`-----------------------------------\n`);
+
+          controller.close();
+        } catch (error) {
+          if (error.name === 'AbortError' || error.message?.includes('aborted')) {
+            console.warn(`[API] Connection cleanly terminated by client abort signal.`);
+          } else {
+            console.error(`[API Exception Thrown]:`, error.message);
+          }
+          controller.error(error);
         }
-        controller.close();
       },
+      cancel() {
+        console.warn(`[API] Connection cleanly terminated by client abort signal.`);
+      }
     });
 
     return new Response(responseStream, {
@@ -78,7 +112,11 @@ export async function POST(req) {
     });
 
   } catch (error) {
-    console.error('Groq API Error:', error);
+    if (error.name === 'AbortError' || error.message?.includes('aborted')) {
+      console.warn(`[API] Connection cleanly terminated by client abort signal.`);
+    } else {
+      console.error(`[API Exception Thrown]:`, error.message);
+    }
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
       headers: { 'Content-Type': 'application/json' },
