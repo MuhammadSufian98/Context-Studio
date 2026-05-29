@@ -1,59 +1,43 @@
-# Refiner - AI Text Improvement Tool
+# Context Studio
 
-Refiner is a small web application that helps users improve written text using Large Language Models (LLMs). It features real-time streaming transformations, an iterative refinement loop, and token cost tracking.
+Context Studio is a premium, full-stack AI-native workspace designed for deep focus and surgical text refinement. Moving away from standard, high-noise chat interfaces, it provides an elegant, distraction-free environment that treats AI interaction like a deliberate, tactile editorial craft.
 
-## 🚀 Features
+---
 
-- **Text Transformations:** Summarize, Make Formal, Make Casual, Simplify, and Expand.
-- **Streaming Response:** See the model's output token-by-token.
-- **Iterative Refinement:** Follow up with free-text instructions (e.g., "shorter", "use bullet points") while preserving context.
-- **Generation Cancellation:** Halt a request mid-flight to save time and token credits.
-- **Token & Cost Tracking:** Real-time estimation of usage costs (based on Llama 3 8B).
-- **Rich Text Support:** Markdown rendering for structured LLM outputs.
+## 🚀 Architectural Core Features
 
-## 🛠️ Tech Stack
+- **Tactile Workspace Configuration:** Features an elegant editorial vertical stack layout rather than cramped, traditional side-by-side viewports, optimizing reading pacing and layout legibility.
+- **Spring-Animated Tab Slider:** Powered by a high-fidelity Framer Motion slider navigation element (`stiffness: 400, damping: 32`) to seamlessly swap view contexts without breaking underlying state layers.
+- **Surgical Paragraph Targeting:** Users can tap individual text paragraphs inside an AI response card to dynamically isolate that specific text layer and pass it as a targeted segment wrapper for precision corrections.
+- **Alternative Model Variance Streams:** Intercepts runtime string events to visually flag alternative model regenerations with a custom UI layout box, separating regular edits from speculative creative alternatives.
+- **Live Metrics & Telemetry Telemetry:** Real-time, character-based calculations mapping total token usage and compute costs on the fly, alongside inline live character counters.
+- **Real-time Streaming & Cancellation:** Sub-second Groq inference loop delivery via Axios streams, completely integrated with an instant `AbortController` cancellation switch to halt text generation mid-flight.
 
-- **Frontend:** Next.js (App Router), React, Tailwind CSS.
-- **State Management:** Zustand (decoupled stores for history, UI, and text).
-- **Transport:** Axios with AbortController for stream management.
-- **Backend:** Next.js API Routes proxying to Groq Cloud.
-- **LLM:** Groq SDK (Llama 3 8B model).
+---
 
-## 📋 Prerequisites
+## 🛠️ The Full-Stack Layer Architecture
 
-- Node.js 18+
-- A Groq API Key (get one at [console.groq.com](https://console.groq.com/))
+- **Frontend framework:** Next.js (App Router), React, Tailwind CSS.
+- **Animation Engine:** Framer Motion (leveraging layout-stable `<AnimatePresence>`).
+- **State Management:** Decoupled Zustand context stores (`useTextStore`, `useHistoryStore`, `useUIStore`) to restrict component re-renders entirely during fast text streaming.
+- **Inference Pipeline Backend:** Next.js Server API routes proxying stream events directly to Groq Cloud.
+- **Core Inference Model:** Llama 3.3 70B / Llama 3 8B through the Groq SDK.
+- **Human-Crafted Prompt Isolation:** Isolated, high-signal system prompt sheets that focus on text texture, spatial rhythm, and crisp syntactic changes.
 
-## ⚙️ Setup
+---
 
-1. **Install Dependencies:**
+## ⚙️ Development Quickstart
+
+1. **Install Local Dependencies:**
    ```bash
    npm install
    ```
+ 
+# Configure Environment Parameters:
+ Create a .env file in the root project directory:
 
-2. **Configure Environment:**
-   Create a `.env.local` file in the root directory:
-   ```env
-   GROQ_API_KEY=your_groq_api_key_here
-   ```
+GROQ_API_KEY=your_groq_api_key_here
 
-3. **Run Development Server:**
-   ```bash
-   npm run dev
-   ```
-   Open [http://localhost:3000](http://localhost:3000).
-
-## 🧠 Key Decisions & Architecture
-
-- **Zustand over Context:** I chose Zustand to avoid unnecessary re-renders during fast-paced token streaming. By splitting state into `useTextStore`, `useHistoryStore`, and `useUIStore`, each component only listens to the specific data it needs.
-- **Axios for Streams:** While `fetch` is native, Axios allows for cleaner global configurations and easier integration with `AbortController` for request cancellation across different utility functions.
-- **Server-Side Prompt Isolation:** All system prompts are stored in `src/lib/prompts.js` and are never exposed to the client. The backend route handles the injection of these prompts and the conversation history.
-- **Approximated Metrics:** Token counts are estimated using a character-based heuristic (4 chars/token). This provides instant feedback to the user without adding API latency for precise counting.
-
-## 🔮 What I'd Do With Another Day
-
-1. **Persistent History:** Implement local storage or a light database (like Supabase) to persist refinement sessions across browser refreshes.
-2. **Advanced Markdown Handling:** Use a more robust parser to handle edge cases where markdown tags (like code blocks) are split across stream chunks.
-3. **E2E Testing:** Add Playwright tests to simulate network drops and verify that the "Cancel" button correctly interrupts the backend process.
-4. **Model Selection:** Allow users to toggle between different models (e.g., Llama 3 70B vs 8B) to see the difference in quality and cost.
-5. **Precise Token Counts:** Integrate the `usage` metadata returned by Groq at the end of the stream for exact billing/tracking.
+# Launch the Development Server:
+npm run dev
+Navigate your browser tab to http://localhost:3000.
