@@ -111,8 +111,7 @@ export default function Controls() {
           onClick={handleCancel}
           className="w-full h-11 tracking-widest bg-red-50 text-red-700 border border-red-200"
         >
-          <XCircle className="w-4 h-4 animate-pulse text-red-600" />
-          <span>Halt Generation</span>
+          <span>Abort Generation</span>
         </Button>
       )}
     </div>
